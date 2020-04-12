@@ -2,7 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
+const firebaseAdmin = require('firebase-admin')
 const authConfig = require("./src/auth_config.json");
+const serviceAccount = require('./firebase/firebase-key');
+
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert(serviceAccount),
+  databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+});
 
 const app = express();
 
@@ -16,8 +23,9 @@ if (!authConfig.domain || !authConfig.audience) {
   );
 }
 
-app.use(morgan("dev"));
 app.use(cors({ origin: appOrigin }));
+
+console.log({audience: authConfig.audience })
 
 const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
@@ -33,9 +41,17 @@ const checkJwt = jwt({
 });
 
 app.get("/api/external", checkJwt, (req, res) => {
-  res.send({
-    msg: "Your access token was successfully validated!"
-  });
+ const {sub: uid} = req.user;
+
+  try {
+    const firebaseToken = await firebaseAdmin.auth().createCustomToken(uid);
+    res.json({firebaseToken});
+  } catch (err) {
+    res.status(500).send({
+      message: 'Something went wrong acquiring a Firebase token.',
+      error: err
+    });
+  }
 });
 
 app.listen(port, () => console.log(`API Server listening on port ${port}`));

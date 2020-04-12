@@ -8,6 +8,7 @@ import history from "./utils/history";
 
 // A function that routes the user to the right place
 // after login
+//@ts-ignore
 const onRedirectCallback = appState => {
   history.push(
     appState && appState.targetUrl
@@ -21,6 +22,8 @@ ReactDOM.render(
     domain={config.domain}
     client_id={config.clientId}
     redirect_uri={window.location.origin}
+    audience={config.audience}
+    //@ts-ignore
     onRedirectCallback={onRedirectCallback}
   >
     <App />

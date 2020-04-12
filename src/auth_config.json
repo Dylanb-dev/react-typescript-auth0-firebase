@@ -1,5 +1,7 @@
 {
   "domain": "firebase.au.auth0.com",
+  "audience": "https://myapp.com/api",
   "clientId": "tXIozt9VTA5gyXBin3x73AdgQaZDOdm7",
-  "apiOrigin" : null
+  "apiOrigin" : "https://3001-f0a341a3-3f7e-4011-bd31-d1db64bcab29.ws-us02.gitpod.io",
+  "appOrigin": "https://3000-f0a341a3-3f7e-4011-bd31-d1db64bcab29.ws-us02.gitpod.io"
 }
