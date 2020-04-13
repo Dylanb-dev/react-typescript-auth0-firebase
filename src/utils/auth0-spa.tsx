@@ -59,8 +59,8 @@ export const Auth0Provider = ({
         const fbUser = await firebase
           .auth()
           .signInWithCustomToken(firebaseToken);
-            setFirebaseUser(fbUser);
-            setUser(user);
+        setFirebaseUser(fbUser);
+        setUser(user);
         if (!user.email_verified) {
           setLoading(false);
           window.history.replaceState({}, document.title, "verify-email");
