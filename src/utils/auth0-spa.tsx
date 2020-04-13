@@ -53,8 +53,6 @@ export const Auth0Provider = ({
           }
         });
 
-        console.log({ user });
-        // history.push('/verify-email')
         const { firebaseToken } = await response.json();
         const fbUser = await firebase
           .auth()
