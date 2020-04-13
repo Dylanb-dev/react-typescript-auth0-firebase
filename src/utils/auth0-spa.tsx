@@ -59,6 +59,8 @@ export const Auth0Provider = ({
           .signInWithCustomToken(firebaseToken);
         setFirebaseUser(fbUser);
         setUser(user);
+
+        // Check if email is verfied (only for email + password)
         if (!user.email_verified) {
           setLoading(false);
           window.history.replaceState({}, document.title, "verify-email");
