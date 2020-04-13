@@ -34,6 +34,7 @@ const App = () => {
           <Switch>
             <Route path="/" exact component={Home} />
             <PrivateRoute path="/profile" component={Profile} />
+            <PrivateRoute path="/verify-email" component={() => <div>Verify Email</div>} />
             <PrivateRoute path="/external-api" component={ExternalApi} />
           </Switch>
         </Container>

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Button } from "reactstrap";
 import { useAuth0 } from "../utils/auth0-spa";
 import config from "../auth_config.json";
+import firebase from 'firebase';
+const database = firebase.database();
 
 const { apiOrigin = "http://localhost:3001" } = config;
 
@@ -12,18 +14,14 @@ const ExternalApi = () => {
 
   const callApi = async () => {
     try {
-      const token = await getTokenSilently();
-
-      const response = await fetch(`${apiOrigin}/api/external`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      const responseData = await response.json();
-
-      setShowResult(true);
-      setApiMessage(responseData);
+        //@ts-ignore
+        var userId = firebase.auth().currentUser.uid;
+        // await database.ref('users/' + userId).set({
+        //     username: 'testName',
+        // });
+        const snapshot = await database.ref('/users/' + userId).once('value')
+        setShowResult(true);
+      setApiMessage(JSON.stringify(snapshot.val()));
     } catch (error) {
       console.error(error);
     }
@@ -38,7 +36,10 @@ const ExternalApi = () => {
           external API using an access token, and the API will validate it using
           the API's audience value.
         </p>
-
+        <h1>Firebase User</h1>
+        <p>
+            {JSON.stringify(firebase.auth().currentUser)}
+        </p>
         <Button color="primary" className="mt-5" onClick={callApi}>
           Ping API
         </Button>

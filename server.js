@@ -4,7 +4,7 @@ const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 const firebaseAdmin = require('firebase-admin')
 const authConfig = require("./src/auth_config.json");
-const serviceAccount = require('./firebase/firebase-key');
+const serviceAccount = require('./firebase-key');
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert(serviceAccount),
@@ -40,7 +40,8 @@ const checkJwt = jwt({
   algorithm: ["RS256"]
 });
 
-app.get("/api/external", checkJwt, (req, res) => {
+app.get("/auth", checkJwt, async (req, res) => {
+ console.log(req)
  const {sub: uid} = req.user;
 
   try {
@@ -53,5 +54,20 @@ app.get("/api/external", checkJwt, (req, res) => {
     });
   }
 });
+
+// app.get("/verify-email", checkJwt, async (req, res) => {
+//  console.log(req)
+//  const {sub: uid} = req.user;
+
+//   try {
+//     const firebaseToken = await firebaseAdmin.auth().createCustomToken(uid);
+//     res.json({firebaseToken});
+//   } catch (err) {
+//     res.status(500).send({
+//       message: 'Something went wrong acquiring a Firebase token.',
+//       error: err
+//     });
+//   }
+// });
 
 app.listen(port, () => console.log(`API Server listening on port ${port}`));
